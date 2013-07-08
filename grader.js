@@ -79,40 +79,34 @@ if(require.main == module) {
 	.option('-u, --url ', 'Path to url', assertFileExists, URL_DEFAULT)
 	.parse(process.argv);
     //var checkJson = '';
-
-    if(program.url !== undefined){
-    rest.get(program.url).on('complete', function(result){
-	if (result instanceof Error) {
-console.error('Hello Error Mr: ');
-
-
-	} else {
-fs.writeFile('urlOut.html', result, function (err) {
-if (err) throw err;
-console.log('It\'s saved!');
-//this wokrs but i may have to return something thenuse that return
-//something wrongwith asycn? think checkHtml is being called prematurely
-var checkJson = checkHtmlFile('urlOut.html',program.checks);
-var outJson = JSON.stringify(checkJson,null,4);
-console.log(outJson);
-});
-	}
-    });
-	//this may not work may have to be a string
-
-    }
-
-    else if(program.file !== undefined ){
-	var checkJson = checkHtmlFile(program.file,program.checks);
-    }
-
-    else{
-	console.log("No nothing given");
-	process.exit(1);
-    }
-
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
+	if(program.url !== undefined){
+		rest.get(program.url).on('complete', function(result){
+			if (result instanceof Error) {
+				console.error('Hello Error Mr: ');
+				} else {
+				//probably better to use .writeFileSync
+				fs.writeFile('urlOut.html', result, function (err) {
+					if (err) throw err;
+					console.log('It\'s saved!');
+					//TODO - abstract this out to a seperate function
+					var checkJson = checkHtmlFile('urlOut.html',program.checks);
+					var outJson = JSON.stringify(checkJson,null,4);
+					console.log(outJson);
+					});
+					}
+					
+					});
+					}
+	else if(program.file !== undefined ){
+		var checkJson = checkHtmlFile(program.file,program.checks);
+		}
+	else{
+		console.log("No nothing given");
+		process.exit(1);
+		}
+	
+	var outJson = JSON.stringify(checkJson, null, 4);
+	console.log(outJson);
 } else {
-    exports.checkHtmlFile = checkHtmlFile;
+	exports.checkHtmlFile = checkHtmlFile;
 }

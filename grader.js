@@ -84,7 +84,20 @@ if(require.main == module) {
 			if (result instanceof Error) {
 				console.error('Hello Error Mr: ');
 				} else {
-				//probably better to use .writeFileSync
+				/*below not correct- implement something like following
+				 if(program.url){
+    					rest.get(program.url).on('complete', function(result){
+    					var checkJson = checkHtmlFile(cheerio.load(result), program.checks);
+    					var outJson = JSON.stringify(checkJson, null, 4);
+    					console.log(outJson);
+    					});	
+    					}
+    					//After some debugging and reading a lot on (a)synchronism, JSON and other stuff I used this approach to tackle the problem:
+					remove the checks variable outside the checkHtmlFile function and adjust this function so it takes a cheerio object instead of an html object
+					add an if-test to check if we have to use restler.
+					In the case for the url, make a cheerio object right from the restler output and then use the adjusted checkHtmlFile function on this cheerio object. In this way, we don't have to use a sync function in the restler get command.
+					Nice excercise, not easy, but learned a lot from it.
+    				*/
 				fs.writeFile('urlOut.html', result, function (err) {
 					if (err) throw err;
 					console.log('It\'s saved!');
